@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖼️ معرض الصور السحابي</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>🖼️ معرض الصور السحابي</h1>
+            <div class="header-actions">
+                <button id="adminBtn" class="btn btn-primary">🔐 دخول المشرف</button>
+                <button id="logoutBtn" class="btn btn-danger hidden">🚪 خروج</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="uploadSection" class="upload-section hidden">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📤</div>
+                <p>اسحب الصور هنا أو اضغط لاختيارها</p>
+                <input type="file" id="fileInput" multiple accept="image/*" hidden>
+            </div>
+            <div id="uploadProgress" class="upload-progress hidden">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <span id="progressText">0%</span>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <div id="loading" class="loading">⏳ جاري تحميل الصور...</div>
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-icon">🖼️</div>
+                <p>لا توجد صور في المعرض حالياً</p>
+            </div>
+            <div id="gallery" class="gallery-grid"></div>
+        </section>
+    </main>
+
+    <div id="lightbox" class="lightbox hidden">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightboxImg" src="" alt="صورة كبيرة">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
