@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 تسجيل دخول المشرف</title>
+    <title>تسجيل دخول المشرف</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -13,23 +13,24 @@
             <div class="login-header">
                 <div class="login-icon">🔐</div>
                 <h2>تسجيل دخول المشرف</h2>
-                <p>أدخل بياناتك للوصول إلى لوحة التحكم</p>
+                <p>أدخل بيانات الحساب للوصول لإعدادات الرفع والحذف</p>
             </div>
+
             <form id="loginForm" class="login-form">
                 <div class="form-group">
-                    <label for="email">📧 البريد الإلكتروني</label>
+                    <label for="email">البريد الإلكتروني</label>
                     <input type="email" id="email" required placeholder="admin@example.com">
                 </div>
                 <div class="form-group">
-                    <label for="password">🔑 كلمة المرور</label>
+                    <label for="password">كلمة المرور</label>
                     <input type="password" id="password" required placeholder="••••••••">
                 </div>
-                <div id="loginError" class="error-message hidden"></div>
-                <button type="submit" class="btn btn-primary btn-full">
-                    <span id="loginText">دخول</span>
-                    <span id="loginSpinner" class="spinner hidden">⏳</span>
-                </button>
+                
+                <div id="errorMessage" class="error-message hidden"></div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-full">تسجيل الدخول</button>
             </form>
+
             <a href="index.html" class="back-link">← العودة للمعرض</a>
         </div>
     </div>
@@ -39,28 +40,36 @@
         const SUPABASE_KEY = 'sb_publishable_TbHIpYf-nRrSAM54YQkTwQ_jQsxY9fw';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const loginText = document.getElementById('loginText');
-            const loginSpinner = document.getElementById('loginSpinner');
-            const loginError = document.getElementById('loginError');
 
-            loginText.classList.add('hidden');
-            loginSpinner.classList.remove('hidden');
-            loginError.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ جاري التحقق...';
+            errorMessage.classList.add('hidden');
 
             try {
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
                 if (error) throw error;
+
+                // التوجيه إلى الصفحة الرئيسية عند نجاح الدخول
                 window.location.href = 'index.html';
             } catch (err) {
-                loginError.textContent = '❌ ' + (err.message || 'فشل تسجيل الدخول');
-                loginError.classList.remove('hidden');
+                errorMessage.textContent = '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
+                errorMessage.classList.remove('hidden');
             } finally {
-                loginText.classList.remove('hidden');
-                loginSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تسجيل الدخول';
             }
         });
     </script>
